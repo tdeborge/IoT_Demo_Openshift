@@ -1,5 +1,6 @@
 package com.redhat.demo.iot.gateway.rules_cep;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Logger;
 
@@ -7,6 +8,8 @@ import javax.jms.JMSException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.IOUtils;
 
 public class App 
 {
@@ -54,7 +57,12 @@ public class App
 	
 	            StringReader reader = new StringReader( messageFromQueue );
 	            
-	            System.out.println("Message from Queue is <"+reader.toString()+">");
+	            try {
+					System.out.println("Message from Queue is <"+IOUtils.toString(reader)+">");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	            
 	            DataSet event = (DataSet) unmarshaller.unmarshal(reader);
 		
