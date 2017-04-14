@@ -2,10 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:camel="http://camel.apache.org/schema/spring"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-     <!--Helper Bean to extract data from MQTT Topic and and to Message in csv values  -->
+    <!--Helper Bean to extract data from MQTT Topic and and to Message in csv values  -->
     <bean class="com.redhat.demo.MyHelper" id="myHelper"/>
-    
-    
     <bean class="org.apache.activemq.ActiveMQConnectionFactory" id="jmsConnectionFactory">
         <property name="brokerURL" value="tcp://broker-amq-tcp:61616"/>
         <property name="userName" value="admin"/>
@@ -24,21 +22,19 @@
     <bean class="org.apache.activemq.camel.component.ActiveMQComponent" id="activemq">
         <property name="configuration" ref="jmsConfig"/>
     </bean>
-    
     <!-- Define a traditional camel context here -->
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <dataFormats>
-            <bindy
-                classType="com.redhat.demo.Dataset"
+            <bindy classType="com.redhat.demo.Dataset"
                 id="bindyDataFormat" type="Csv"/>
         </dataFormats>
         <route id="simple-route">
             <from id="_from1" uri="mqtt:mqtt.temp.receiver?host=tcp://broker-amq-mqtt:1883&amp;subscribeTopicNames=iotdemo/#/#&amp;reconnectBackOffMultiplier=2&amp;connectAttemptsMax=5&amp;userName=admin&amp;password=change12_me"/>
-            <log id="route-log" message=">>> ${body}"/>
             <bean beanType="com.redhat.demo.MyHelper" id="_bean1"
                 method="enhanceMessage" ref="myHelper"/>
             <unmarshal id="_unmarshal1" ref="bindyDataFormat"/>
             <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
+            <log id="route-log" message=">>> ${body}"/>
             <to id="_to1" uri="activemq:queue:message.to.rules_cep"/>
         </route>
     </camelContext>
