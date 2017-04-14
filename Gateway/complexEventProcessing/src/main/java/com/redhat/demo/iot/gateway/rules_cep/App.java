@@ -53,6 +53,9 @@ public class App
 	            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 	
 	            StringReader reader = new StringReader( messageFromQueue );
+	            
+	            System.out.println("Message from Queue <"+messageFromQueue+">");
+	            
 	            DataSet event = (DataSet) unmarshaller.unmarshal(reader);
 		
 	            event.setRequired(0);	    

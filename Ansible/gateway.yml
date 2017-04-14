@@ -35,3 +35,8 @@
 
       - name: Add policy to new serviceaccount
         shell: "oc policy add-role-to-user view system:serviceaccount:smartgateway:amq-service-account"
+
+      - name: Install JDK S2I ImageStream
+        shell: "oc create -f openjdk-s2i-imagestream.json"
+        args:
+          chdir: ../Gateway/config/
