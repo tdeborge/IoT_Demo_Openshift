@@ -54,7 +54,7 @@ public class App
 	
 	            StringReader reader = new StringReader( messageFromQueue );
 	            
-	            System.out.println("Message from Queue <"+messageFromQueue+">");
+	            System.out.println("Message from Queue <"+reader+">");
 	            
 	            DataSet event = (DataSet) unmarshaller.unmarshal(reader);
 		
