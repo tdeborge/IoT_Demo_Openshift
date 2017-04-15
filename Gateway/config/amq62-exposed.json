@@ -56,16 +56,14 @@
             "displayName": "A-MQ Username",
             "description": "User name for standard broker user. It is required for connecting to the broker. If left empty, it will be generated.",
             "name": "MQ_USERNAME",
-            "from": "user[a-zA-Z0-9]{3}",
-            "generate": "expression",
+            "value": "admin",
             "required": false
         },
         {
             "displayName": "A-MQ Password",
             "description": "Password for standard broker user. It is required for connecting to the broker. If left empty, it will be generated.",
             "name": "MQ_PASSWORD",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
+            "value": "change12_me",
             "required": false
         },
         {

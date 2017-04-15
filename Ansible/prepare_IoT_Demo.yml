@@ -1,0 +1,51 @@
+- name: Configure this system to run IoT Demo
+  hosts: demos
+  connection: local
+  tasks:
+      - name: Login to Openshift as Admin
+        shell: "oc login -u admin -p admin 10.1.2.2:8443"
+
+      - name: Change into the Openshift project
+        shell: "oc project openshift"
+
+      - name: Define path to Fuse Integration Framework image stream
+        set_fact: BASEURL='https://raw.githubusercontent.com/jboss-fuse/application-templates/GA'
+
+      - name: Install Fuse Integration Framework image stream
+        shell: "oc replace --force -n openshift -f {{BASEURL}}/fis-image-streams.json"
+
+      - name: Install JBoss A-MQ templates
+        shell: "oc create -f amq62-exposed.json"
+        args:
+          chdir: ../Gateway/config/
+
+      - name: Switch Openshift user to developer user
+        shell: "oc login -u openshift-dev -p devel  10.1.2.2:8443"
+
+      - name: Create new project in Openshift to host Gateway+
+        shell: "oc new-project smartgateway"
+
+      - name: Create serviceaccount
+        shell: "oc create -f amq-app-secret.json"
+        args:
+          chdir: ../Gateway/config/
+
+      - name: Add policy to new serviceaccount
+        shell: "oc policy add-role-to-user view system:serviceaccount:smartgateway:default"
+
+      - name: Add policy to new serviceaccount
+        shell: "oc policy add-role-to-user view system:serviceaccount:smartgateway:amq-service-account"
+
+      - name: Install JDK S2I ImageStream
+        shell: "oc create -f openjdk-s2i-imagestream.json"
+        args:
+          chdir: ../Gateway/config/
+
+      - name: Deploy JBoss A-MQ
+        shell: "oc new-app amq62-exposed"
+
+      - name: Create Route to MQTT Broker Service
+        shell: "oc expose service broker-amq-mqtt"
+
+      - name: Create Route to JMS Broker Service
+        shell: "oc expose service broker-amq-tcp"

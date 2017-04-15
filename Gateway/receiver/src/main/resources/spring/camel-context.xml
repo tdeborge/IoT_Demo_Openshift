@@ -27,12 +27,14 @@
         <dataFormats>
             <bindy classType="com.redhat.demo.Dataset"
                 id="bindyDataFormat" type="Csv"/>
+            <jaxb id="myJaxb" prettyPrint="true" contextPath="com.redhat.demo"/>
         </dataFormats>
-        <route id="simple-route">
+        <route id="messageFromSensor">
             <from id="_from1" uri="mqtt:mqtt.temp.receiver?host=tcp://broker-amq-mqtt:1883&amp;subscribeTopicNames=iotdemo/#/#&amp;reconnectBackOffMultiplier=2&amp;connectAttemptsMax=5&amp;userName=admin&amp;password=change12_me"/>
-            <bean beanType="com.redhat.demo.MyHelper" id="_bean1" method="enhanceMessage" ref="myHelper"/>
+            <bean beanType="com.redhat.demo.MyHelper" id="_bean1"
+                method="enhanceMessage" ref="myHelper"/>
             <unmarshal id="_unmarshal1" ref="bindyDataFormat"/>
-            <log id="route-log" message="Message after unmarshal >>> ${body}"/>
+            <marshal ref="myJaxb"/>
             <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
             <log id="route-log" message="Message to Queue >>> ${body}"/>
             <to id="_to1" uri="activemq:queue:message.to.rules_cep"/>
