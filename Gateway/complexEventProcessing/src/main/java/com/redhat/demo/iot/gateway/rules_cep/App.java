@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.util.logging.Logger;
 
 import javax.jms.JMSException;
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -64,25 +65,14 @@ public class App
 	            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 	
 	            StringReader reader = new StringReader( messageFromQueue );
-	            
-	            try {
-					System.out.println("Message from Queue is "+IOUtils.toString(reader));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	            
-	            Dataset event = (Dataset) unmarshaller.unmarshal(reader);
+	               
+	            Dataset event = JAXB.unmarshal(reader, Dataset.class);
 		
 	            event.setRequired(0);	    
 	         
             	event = cepServer.insert( event);
-      	      	
-//	            System.out.println("Rules Event-DeviceType <"+event.getDeviceType()+">");
-	                     
+ 	                     
 	            if ( event.getRequired() == 1 ) {
-	            	
-//	            	System.out.println("Have to send the message " + event.toCSV());
 	            	
 	            	producer.run(event);
 	            	

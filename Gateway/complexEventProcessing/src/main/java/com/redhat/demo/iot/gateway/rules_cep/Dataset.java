@@ -2,6 +2,7 @@ package com.redhat.demo.iot.gateway.rules_cep;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -54,6 +55,7 @@ public class Dataset {
 	/**
 	 * @param required the required to set
 	 */
+	@XmlElement
 	public void setRequired(int required) {
 		this.required = required;
 	}
@@ -68,6 +70,7 @@ public class Dataset {
 	/**
 	 * @param timestamp the timestamp to set
 	 */
+	@XmlElement
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -82,6 +85,7 @@ public class Dataset {
 	/**
 	 * @param deviceType the deviceType to set
 	 */
+	@XmlElement
 	public void setDeviceType(String deviceType) {
 		this.deviceType = deviceType;
 	}
@@ -96,6 +100,7 @@ public class Dataset {
 	/**
 	 * @param deviceID the deviceID to set
 	 */
+	@XmlElement
 	public void setDeviceID(int deviceID) {
 		this.deviceID = deviceID;
 	}
@@ -110,6 +115,7 @@ public class Dataset {
 	/**
 	 * @param payload the payload to set
 	 */
+	@XmlElement
 	public void setPayload(int payload) {
 		this.payload = payload;
 	}
@@ -118,6 +124,7 @@ public class Dataset {
 		return errorMessage;
 	}
 
+	@XmlElement
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
@@ -126,6 +133,7 @@ public class Dataset {
 		return errorCode;
 	}
 
+	@XmlElement
 	public void setErrorCode(int errorCode) {
 		this.errorCode = errorCode;
 	}
@@ -134,6 +142,7 @@ public class Dataset {
 		return average;
 	}
 
+	@XmlElement
 	public void setAverage(float average) {
 		this.average = average;
 	}
@@ -142,6 +151,7 @@ public class Dataset {
 		return count;
 	}
 
+	@XmlElement
 	public void setCount(int count) {
 		this.count = count;
 	}
