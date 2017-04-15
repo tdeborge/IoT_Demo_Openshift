@@ -19,12 +19,20 @@ public class App
     {
     	String 	messageFromQueue;
     	
-    	String 	sourceAMQBroker = System.getenv("SOURCE_AMQ_BROKER");
-    	String 	targetAMQBroker = System.getenv("TARGET_AMQ_BROKER");
-    	String 	sourceQueue 	= System.getenv("SOURCE_QUEUE");
-    	String 	targetQueue 	= System.getenv("TARGET_QUEUE");
-    	String  brokerUID		= System.getenv("BROKER_ADMIN_UID");
-    	String  brokerPassword  = System.getenv("BROKER_ADMIN_PASSWD");
+//    	String 	sourceAMQBroker = System.getenv("SOURCE_AMQ_BROKER");
+//    	String 	targetAMQBroker = System.getenv("TARGET_AMQ_BROKER");
+//    	String 	sourceQueue 	= System.getenv("SOURCE_QUEUE");
+//    	String 	targetQueue 	= System.getenv("TARGET_QUEUE");
+//    	String  brokerUID		= System.getenv("BROKER_ADMIN_UID");
+//    	String  brokerPassword  = System.getenv("BROKER_ADMIN_PASSWD");
+
+       	String 	sourceAMQBroker = "tcp://broker-amq-tcp-smartgateway.rhel-cdk.10.1.2.2.xip.io:30616";
+    	String 	targetAMQBroker = "tcp://broker-amq-tcp-smartgateway.rhel-cdk.10.1.2.2.xip.io:30616";
+    	String 	sourceQueue 	= "message.to.rules_cep";
+    	String 	targetQueue 	= "message.to.datacenter";
+    	String  brokerUID		= "admin";
+    	String  brokerPassword  = "change12_me";
+ 
     	
     	// Variables introduced for countint incoming and outgoing messages
     	int numberIncomingMessages = 0;
@@ -52,19 +60,19 @@ public class App
 			if ( messageFromQueue != null ) {
 				
 	            // Convert TextMessage to DataSet via jaxb unmarshalling
-	            JAXBContext jaxbContext = JAXBContext.newInstance(DataSet.class);
+	            JAXBContext jaxbContext = JAXBContext.newInstance(Dataset.class);
 	            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 	
 	            StringReader reader = new StringReader( messageFromQueue );
 	            
 	            try {
-					System.out.println("Message from Queue is <"+IOUtils.toString(reader)+">");
+					System.out.println("Message from Queue is "+IOUtils.toString(reader));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	            
-	            DataSet event = (DataSet) unmarshaller.unmarshal(reader);
+	            Dataset event = (Dataset) unmarshaller.unmarshal(reader);
 		
 	            event.setRequired(0);	    
 	         

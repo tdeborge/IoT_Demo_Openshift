@@ -6,8 +6,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "dataSet")
-@XmlType(propOrder = { "timestamp", "deviceType", "deviceID", "payload", "count", "required", "average", "errorCode", "errorMessage" })
-public class DataSet {
+@XmlType(propOrder = { "timestamp", "deviceType", "deviceID","count", "payload","required","average","errorMessage" ,"errorCode"})
+public class Dataset {
 	private String	timestamp;
 	private String	deviceType;
 	private int		deviceID;	
@@ -18,7 +18,7 @@ public class DataSet {
 	private int  	errorCode;
 	private int 	count;
 	
-	public DataSet()
+	public Dataset()
 	{
 		this.timestamp 	= "";
 		this.deviceType = "";
@@ -29,7 +29,7 @@ public class DataSet {
 		this.count		= 0;
 	}
 	
-	public DataSet(String time, String devType, int devID, int pay, int required, float average, int count)
+	public Dataset(String time, String devType, int devID, int pay, int required, float average, int count)
 	{
 		this.timestamp 	= time;
 		this.deviceType = devType;

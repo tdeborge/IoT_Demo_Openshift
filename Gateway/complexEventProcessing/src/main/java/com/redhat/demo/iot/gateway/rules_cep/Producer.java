@@ -52,13 +52,13 @@ public class Producer {
 			}
 	 }
  
-	 public void run(DataSet data) {
+	 public void run(Dataset data) {
 		 // Convert message to XML
          String result;
          StringWriter sw = new StringWriter();
          
          try {
-             JAXBContext dataSetContext = JAXBContext.newInstance(DataSet.class);
+             JAXBContext dataSetContext = JAXBContext.newInstance(Dataset.class);
              Marshaller dataSetMarshaller = dataSetContext.createMarshaller();
              dataSetMarshaller.marshal(data, sw);
              result = sw.toString();

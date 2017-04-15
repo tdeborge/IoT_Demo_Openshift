@@ -34,7 +34,7 @@ public class CepServer {
 		kieSession = kieContainer.newKieSession();
     }
     
-    public DataSet insert( DataSet event ) {
+    public Dataset insert( Dataset event ) {
 		SessionClock clock = kieSession.getSessionClock();
 	
 		SessionPseudoClock pseudoClock = (SessionPseudoClock) clock;
