@@ -1,0 +1,67 @@
+= IoT Demo - OpenShift
+
+:Author:    Patrick Steiner
+:Email:     psteiner@redhat.com
+:Date:      15.04.2017
+
+:toc: macro
+
+toc::[]
+
+== Purpose
+This Demo is an updated version of the IoT Demo made of
+
+ * https://github.com/PatrickSteiner/IoT_Demo_Datacenter[Datacenter]
+ * https://github.com/PatrickSteiner/IoT_Demo_Gateway[Gateway]
+
+The difference from this setup to the one in the repositories mentioned above is,
+that this runs on https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift],
+the Docker & Kubernetes based Container runtime environment provided by https://www.redhat.com/en[Red Hat].
+
+== Prerequisites
+This Demo assumes you have
+
+  * access to a running https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift] system
+  * good knowledge on https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift]
+  * an https://www.ansible.com/[Ansible] host
+  * good working knowledge of https://www.ansible.com/[Ansible]
+
+During this instructions, I will assume you have a fresh installation of https://developers.redhat.com/products/cdk/overview/[Red Hat Container Development Kit],
+but any other OpenShift V3 installation will work as well.
+
+== Gateway
+The Gateway in an IoT Architecture is responsible as
+
+ * local access point for sensors
+ * first aggregation- or filter-point for sensor data
+ * "normalization" of sensor data
+ * forwarding sensor data to datacenter
+
+=== Installation of Gateway
+This repository provides you with an https://www.ansible.com/[Ansible] script to
+install
+
+ * install https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_jboss_fuse_integration_services_2.0_for_openshift/[RED HAT JBOSS FUSE INTEGRATION SERVICES 2.0 FOR OPENSHIFT]
+ * install https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html-single/red_hat_jboss_a-mq_for_openshift/[RED HAT JBOSS A-MQ FOR OPENSHIFT]
+
+To install these OpenShift artefacts, please run
+
+ $ cd Ansible
+ $ ansible-playbook prepare_IoT_Demo.yml
+
+With this done, you can login to https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift] to
+deploy the the *Gateway Code*.
+
+ $ cd Gateway/receiver/
+ $ mvn fabric8:deploy
+
+This will install a https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_jboss_fuse_integration_services_2.0_for_openshift/[RED HAT JBOSS FUSE INTEGRATION SERVICES 2.0 FOR OPENSHIFT] based
+Camel route, which
+
+ * reads Sensor data from MQTT Topics
+ * convert MQTT data / topic into a XML Document
+ * place XML Document into JMS Queue
+
+With this done, the next step will install a https://www.redhat.com/en/technologies/jboss-middleware/business-rules[JBoss BRMS] based service,
+which uses Complex Event Processing to filter messages with same values and to calculate an
+average.
