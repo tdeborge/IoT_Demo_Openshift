@@ -49,6 +49,20 @@ To install these OpenShift artefacts, please run
  $ cd Ansible
  $ ansible-playbook prepare_IoT_Demo.yml
 
+[NOTE]
+====
+Depending on the performance of your OpenShift infrastructure, it might take a while
+for the deployed artifacts to be really available. On my MacBook it's about 2 minutes.
+
+To verify, you can check if the JBoss Fuse Integration Services ImageStream is
+ready
+
+ $ oc get is -n openshift
+ NAME                    ...                         UPDATED
+ fis-java-openshift      ...                     34 minutes ago
+ fis-karaf-openshift     ...                     34 minutes ago
+====
+
 With this done, you can login to https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift] to
 deploy the the *Gateway Code*.
 
@@ -65,3 +79,21 @@ Camel route, which
 With this done, the next step will install a https://www.redhat.com/en/technologies/jboss-middleware/business-rules[JBoss BRMS] based service,
 which uses Complex Event Processing to filter messages with same values and to calculate an
 average.
+
+ $ oc new-app --image-stream=redhat-openjdk18-openshift --context-dir=Gateway/complexEventProcessing https://github.com/PatrickSteiner/IoT_Demo_Openshift -e AB_JOLOKIA_OFF=true -e JAVA_APP_JAR="rules_cep-jar-with-dependencies.jar" -e SOURCE_AMQ_BROKER=tcp://broker-amq-tcp:61616 -e TARGET_AMQ_BROKER=tcp://broker-amq-tcp:61616 -e SOURCE_QUEUE=message.to.rules_cep -e TARGET_QUEUE=message.to.datacenter -e BROKER_ADMIN_UID=admin -e BROKER_ADMIN_PASSWD=change12_me
+
+If you changed anything in your setup, or want the Gateway to send processes data to some
+other JMS Broker, you will have to change the following parameters
+
+[width="80%",frame="topbot",options="header,footer"]
+|==================================
+| Paramter | Default | Meaning
+| SOURCE_AMQ_BROKER | tcp://broker-amq-tcp:61616 | Broker from which to read the Sensordata, after it got changed from MQTT to JMS.
+| TARGET_AMQ_BROKER | tcp://broker-amq-tcp:61616 | Broker to put Sensordata, after it got processed by the Complex Event Processing service.
+| SOURCE_QUEUE | message.to.rules_cep | JMS Queue from which to read the Sensordata.
+| TARGET_QUEUE | message.to.datacenter | JMS Queue to place the processed Sensordata to.
+| BROKER_ADMIN_UID | admin | User-ID to authenticate at JMS Broker. Source- and Target-Broker need to have the same!
+| BROKER_ADMIN_PASSWORD | change12_me | Password to authenticate at JMS Broker. Source- and Target-Broker need to have the same!
+|==================================
+
+=== Sending Simulated Sensordata
